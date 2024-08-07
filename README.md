@@ -1,3 +1,3 @@
 # Introduction to Data Science & Big Data Analytics
 
-## Sandisk 18 Jun 2024
+## Silitech Technology 8 Aug 2024
