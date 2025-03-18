@@ -1,3 +1,3 @@
 # Introduction to Data Science & Big Data Analytics
 
-## Keysight 18 - 19 March 2025
+## Keysight 19 - 20 March 2025
