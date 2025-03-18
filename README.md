@@ -1,3 +1,3 @@
 # Introduction to Data Science & Big Data Analytics
 
-## Silitech Technology 8 Aug 2024
+## Keysight 18 - 19 March 2025
