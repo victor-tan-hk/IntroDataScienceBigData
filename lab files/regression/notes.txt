@@ -1,0 +1,4 @@
+
+The two CSV files Predictive-Maintenance and Basic-Sales are meant to be used as attachment to ChatGPT prompts. They are CSV versions of the original xlsx, but with simplified column names.
+
+ 

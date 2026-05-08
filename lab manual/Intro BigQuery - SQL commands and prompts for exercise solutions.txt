@@ -1,0 +1,607 @@
+
+
+++++ 3	Basic SELECT 
+
+Q1 SAMPLE QUERY: 
+
+SELECT trade_type, user_id, currency  
+FROM exercise_dataset.sampletransactions;
+
+
+++++ 3.1	SELECT with expressions and aliases
+
+Q2 
+
+SAMPLE PROMPT:
+
+Create a new column called difference which is computed as the difference between the exit_price and entry_price columns for sampletransactions. Show only the trade_id, entry_price, exit_price and difference columns.
+ 
+SAMPLE QUERY:
+
+SELECT trade_id, entry_price, exit_price, 
+exit_price - entry_price as difference 
+FROM exercise_dataset.sampletransactions;
+
+Q3
+
+SAMPLE PROMPTS:
+
+Create a new column called diff_days which is computed as the difference between the close_time and open_time in days. Show only the trade_id, open_time, close_time and diff_days columns.
+
+Create a new column called diff_hours which is computed as the difference between the close_time and open_time in hours. Show only the trade_id, open_time, close_time and diff_hours columns.
+
+Create a new column called diff_minutes which is computed as the difference between the close_time and open_time in minutes. Show only the trade_id, open_time, close_time and diff_minutes columns.
+
+
+SAMPLE QUERY: 
+
+SELECT trade_id, open_time, close_time,
+TIMESTAMP_DIFF(close_time, open_time, DAY) AS diff_days
+FROM exercise_dataset.sampletransactions;
+
+
+
+SELECT trade_id, open_time, close_time,
+TIMESTAMP_DIFF(close_time, open_time, HOUR) AS diff_hours
+FROM exercise_dataset.sampletransactions;
+
+
+SELECT trade_id, open_time, close_time,
+TIMESTAMP_DIFF(close_time, open_time, MINUTE) AS diff_minutes
+FROM exercise_dataset.sampletransactions;
+
+
+Q4
+
+SAMPLE PROMPT:
+
+Compute the difference between the close_time and open_time in terms of both number of hours and minutes, rather than only hours or minutes. This difference in terms of hours and minutes should be stored in 2 new columns: hours and mins. Show only the trade_id, open_time, close_time, hours and mins columns.
+
+SAMPLE QUERY: 
+
+
+
+
+
+SELECT trade_id, open_time, close_time,
+  FLOOR(TIMESTAMP_DIFF(close_time, open_time, SECOND) / 3600) AS hours,
+  FLOOR(MOD(TIMESTAMP_DIFF(close_time, open_time, SECOND), 3600) / 60) AS mins
+FROM exercise_dataset.sampletransactions;
+
+OR
+
+SELECT trade_id, open_time, close_time,
+TIMESTAMP_DIFF(close_time, open_time, HOUR)
+|| ' hours ' ||
+MOD(TIMESTAMP_DIFF(close_time, open_time, MINUTE),60)  
+|| ' minutes ' AS duration
+FROM exercise_dataset.sampletransactions;
+
+
+
++++ 3.3 SELECT with DISTINCT and COUNT
+
+
+Q5
+
+SAMPLE PROMPT:
+
+Show all the different unique platforms available from sampletransactions 
+
+SAMPLE QUERY: 
+
+SELECT DISTINCT platform 
+FROM exercise_dataset.sampletransactions;
+
+
+Q6
+
+SAMPLE PROMPT:
+
+Show all the unique combination of values possible for currency and instrument from sampletransactions 
+
+SAMPLE QUERY: 
+
+SELECT DISTINCT currency, instrument 
+FROM exercise_dataset.sampletransactions;
+
+
+
+Q7
+
+SAMPLE PROMPT:
+
+Count the total number of unique values possible for currency from sampletransactions 
+
+Count the total number of unique values possible for instrument from sampletransactions 
+
+SAMPLE QUERY: 
+
+SELECT COUNT(DISTINCT currency) AS Total_Currencies 
+FROM exercise_dataset.sampletransactions;
+
+
+
+SELECT COUNT(DISTINCT instrument) AS Total_Instruments 
+FROM exercise_dataset.sampletransactions;
+
+
++++ 3.3	SELECT with LIMIT
+
+Q8
+
+SAMPLE PROMPT:
+
+Show the first 10 rows from sampletransactions 
+
+SAMPLE QUERY: 
+
+
+SELECT * FROM exercise_dataset.sampletransactions
+LIMIT 10;
+
+
++++ 5	Sorting rows with ORDER BY
+
+Q1
+
+SAMPLE PROMPT:
+
+Sort the rows in ascending order of the entry_price and show only the trade_id and entry_price columns from sampletransactions. Limit the result returned to the first 10 rows.
+
+SAMPLE QUERY: 
+
+SELECT trade_id, entry_price 
+FROM exercise_dataset.sampletransactions
+ORDER BY entry_price
+LIMIT 10;
+
+
+Q2
+
+SAMPLE PROMPT:
+
+Create a new column difference which is computed as the magnitude or absolute value of the difference between exit_price and entry_price from sampletransactions. Show only the trade_id, exit_price, entry_price and difference columns and sort the result on descending order of the difference column. Limit the result returned to the first 10 rows.
+
+SAMPLE QUERY: 
+
+SELECT trade_id, entry_price, exit_price,
+ABS(exit_price - entry_price) as difference 
+FROM exercise_dataset.sampletransactions
+ORDER BY difference DESC
+LIMIT 10;
+
+
+SELECT trade_id, entry_price, exit_price,
+ROUND(ABS(exit_price - entry_price), 2) as difference 
+FROM exercise_dataset.sampletransactions
+ORDER BY difference DESC
+LIMIT 10;
+
+
+
+Q3
+
+SAMPLE PROMPT:
+
+Sort the rows from sampletransactions in descending order of currency. For rows with the same value of currency, sort on ascending order of trade_volume.
+
+
+SAMPLE QUERY: 
+
+SELECT trade_id, currency, trade_volume
+FROM exercise_dataset.sampletransactions
+ORDER BY currency DESC, trade_volume ASC;
+
+
+Q4
+
+SAMPLE PROMPT:
+
+Create a new column diff_minutes which is the difference between close_time and open_time in minutes.  Show the first 10 rows sorted in descending order of diff_minutes
+
+
+
+SAMPLE QUERY: 
+
+SELECT trade_id, open_time, close_time,
+TIMESTAMP_DIFF(close_time, open_time, MINUTE) AS diff_minutes
+FROM exercise_dataset.sampletransactions
+ORDER BY diff_minutes DESC
+LIMIT 10;
+
+
+
+++++ 7	Filtering with WHERE
+
+Q1
+
+SAMPLE PROMPT:
+
+Show all rows where the currency column has the value EUR. Show only trade_id and currency columns from the rows. 
+
+SAMPLE QUERY: 
+
+SELECT trade_id, currency
+FROM exercise_dataset.sampletransactions
+WHERE currency = 'EUR';
+
+Q2
+
+SAMPLE PROMPT:
+
+Count the number of rows where the instrument is of type futures 
+
+SAMPLE QUERY: 
+
+SELECT COUNT(*) AS TotalFutures
+FROM exercise_dataset.sampletransactions
+WHERE instrument = 'futures';
+
+Q3
+
+SAMPLE PROMPT:
+
+Show all the rows where trade_volume is equal to or more than 3000. Show only the trade_id and trade_volume columns
+
+SAMPLE QUERY: 
+
+SELECT trade_id, trade_volume 
+FROM exercise_dataset.sampletransactions
+WHERE trade_volume >= 30000;
+
+
+Q4
+
+SAMPLE PROMPT:
+
+Create a new column difference which is computed as the magnitude or absolute value of the difference between exit_price and entry_price from sampletransactions. Show only the rows where difference is more than 6.0. Show only the trade_id, exit_price, entry_price and difference columns.
+
+SAMPLE QUERY: 
+
+SELECT trade_id, entry_price, exit_price,
+ABS(exit_price - entry_price) as difference 
+FROM exercise_dataset.sampletransactions
+WHERE ABS(exit_price - entry_price) > 6.0;
+
+
+Q5
+
+
+SAMPLE PROMPT:
+
+Show all rows which are not on the NYSE platform and sort them in descending order based on the entry_price. Limit this to the top 10 rows. Show only the trade_id, platform and entry_price columns in the results.
+
+SAMPLE QUERY: 
+
+SELECT trade_id, platform, entry_price 
+FROM exercise_dataset.sampletransactions
+WHERE platform != 'NYSE'
+ORDER BY entry_price DESC
+LIMIT 10;
+
+
+Q6
+
+
+
+SAMPLE PROMPT:
+
+Create a new column diff_hours which is the difference between close_time and open_time in hours.  Show all the rows where diff_hours is 5 or longer and sort these rows in descending order of diff_hours. Show only the first 10 rows and include only the trade_id, open_time, close_time and diff_hours columns.
+
+
+SAMPLE QUERY: 
+
+SELECT trade_id, open_time, close_time,
+TIMESTAMP_DIFF(close_time, open_time, HOUR) AS diff_hours
+FROM exercise_dataset.sampletransactions
+WHERE TIMESTAMP_DIFF(close_time, open_time, HOUR) >= 5 
+ORDER BY diff_hours DESC
+LIMIT 10;
+
+
+
+Q7
+
+
+SAMPLE PROMPT:
+
+Show all the rows where close_time and open_time have the same day value, irrespective of the hours or minutes of the day. Show only trade_id, close_time and open_time columns in the result.
+
+SAMPLE QUERY: 
+
+SELECT trade_id, open_time, close_time
+FROM exercise_dataset.sampletransactions
+WHERE DATE(open_time) = DATE(close_time);
+
+
+
+
+++++ 7.1	Using the AND, OR and NOT operators
+
+Q8
+
+SAMPLE PROMPT:
+
+Show the rows which have currency values of either: USD, EUR, GBP. Sort these in descending order of trade_volume and show the first 10 rows. Show only trade_id, currency and trade_volume columns. Use the OR clause in the query.
+
+
+SAMPLE QUERY: 
+
+Version #1 
+
+SELECT trade_id, currency, trade_volume
+FROM exercise_dataset.sampletransactions
+WHERE currency = 'GBP' OR currency = 'USD' OR currency = 'EUR' 
+ORDER BY trade_volume DESC
+LIMIT 10;
+
+Version #2 (if you leave out the explicit mention of using the OR clause in the query in your original prompt, it will use the shorter version of IN clause)
+
+SELECT trade_id, currency, trade_volume
+FROM exercise_dataset.sampletransactions
+WHERE currency IN ('USD', 'EUR', 'GBP')
+ORDER BY trade_volume DESC
+LIMIT 10;
+
+
+Q9
+
+SAMPLE PROMPT:
+
+Create a new column called difference which is computed as the difference between the exit_price and entry_price columns for sampletransactions. Show only the rows that have currency GBP and platform NYSE. Sort the rows on the difference column in ascending order and show the first 3 rows. Show only the trade_id, platform, currency and difference columns.
+
+SAMPLE QUERY: 
+
+SELECT trade_id, platform, currency,  
+(exit_price - entry_price) as difference 
+FROM exercise_dataset.sampletransactions
+WHERE currency = 'GBP' AND platform = "NYSE"
+ORDER BY difference LIMIT 3;
+
+
+
+
+++++ 7.2	Using BETWEEN for range tests
+
+Q10
+
+SAMPLE PROMPT:
+
+Find all rows where the trade_volume is between 20000 and 40000 and sort them on descending order of trade_volume. Show only the trade_id and trade_volume columns. Use the BETWEEN clause in the query.
+
+SAMPLE QUERY: 
+
+SELECT trade_id, trade_volume 
+FROM exercise_dataset.sampletransactions
+WHERE trade_volume BETWEEN 20000 AND 40000
+ORDER BY trade_volume DESC;
+
+Q11
+
+SAMPLE PROMPT:
+
+Find all rows where open_time is between the start of June 2024 and start of June 2025. Sort them on ascending order of open_time. Use the BETWEEN clause in the query. Show only the trade_id and open_time columns.
+
+SAMPLE QUERY: 
+
+SELECT trade_id, open_time FROM exercise_dataset.sampletransactions
+WHERE open_time BETWEEN '2024-06-01' AND '2025-06-01'
+ORDER BY open_time;
+
+
++++ 7.3	Using IN to check for matching with other values
+
+
+Q12
+
+SAMPLE PROMPT:
+
+Find all rows where platform is either NYSE, Nasdaq or LSE. Sort these rows on descending order of trade_volume and show the first 10 rows. Show only trade_id, platform and trade_volume columns.
+
+SAMPLE QUERY: 
+
+SELECT trade_id, platform, trade_volume 
+FROM exercise_dataset.sampletransactions
+WHERE platform IN ('NYSE', 'Nasdaq', 'SSE', 'LSE')
+ORDER BY trade_volume DESC
+LIMIT 10;
+
+
+
+
+
+++++ 8	Aggregate commands: COUNT, SUM, AVERAGE, MIN, MAX
+
+Q1
+
+
+SAMPLE PROMPT:
+
+Find the average of trade_volume for the rows where currency has the value of USD.
+
+
+SAMPLE QUERY:
+
+SELECT AVG(trade_volume) AS AVG_TRADE 
+FROM exercise_dataset.sampletransactions
+WHERE currency = 'USD';
+
+
+Q2
+
+SAMPLE PROMPT:
+
+Find the lowest value of entry_price for all rows which have the value of LSE or SSE for the platform column.
+
+SAMPLE QUERY:
+
+SELECT MIN(entry_price) AS LowestPrice
+FROM exercise_dataset.sampletransactions
+WHERE platform IN ('LSE','SSE');
+
+Or 
+
+SELECT MIN(entry_price) AS LowestPrice
+FROM exercise_dataset.sampletransactions
+WHERE platform = 'LSE' OR platform = 'SSE';
+
+
+++++ 9.1	Refining queries with aggregate functions for column details
+
+
+Q3
+
+SAMPLE PROMPT:
+
+Find the row with the lowest value of entry_price for all rows which have the value of LSE or SSE for the platform column. For this row, show the trade_id, user_id and entry_price column. Use the MIN function to achieve this.
+
+SAMPLE QUERY:
+Version #1
+
+SELECT trade_id, user_id, entry_price 
+FROM exercise_dataset.sampletransactions
+WHERE platform IN ('LSE','SSE')
+AND entry_price = (
+
+  SELECT MIN(entry_price) AS LowestPrice
+  FROM exercise_dataset.sampletransactions
+  WHERE platform IN ('LSE','SSE')
+
+) LIMIT 1;
+
+
+
+Version  #2: If you do not explicitly specify to use the MIN function, the prompt will return a simpler version 
+
+SELECT trade_id, user_id, entry_price 
+FROM exercise_dataset.sampletransactions
+WHERE platform IN ('LSE', 'SSE')
+ORDER BY entry_price ASC LIMIT 1;
+
+
+
++++ 9	Aggregating and grouping with GROUP BY
+
+Q1
+
+
+SAMPLE PROMPT:
+
+Find the total number of rows for each unique value in the platform column.
+
+
+SAMPLE QUERY:
+
+SELECT platform, COUNT(platform) AS NumTranscations 
+FROM exercise_dataset.sampletransactions
+GROUP BY platform;
+
+
+Q2
+
+SAMPLE PROMPT:
+
+Find the rows with the highest value for entry_price for all unique values in the currency column. Sort these rows in descending order based on this value of entry_price. Show only the currency and the highest value for entry_price in the result.
+
+
+SAMPLE QUERY:
+
+SELECT currency, MAX(entry_price) AS HighestPrice 
+FROM exercise_dataset.sampletransactions
+GROUP BY currency
+ORDER BY HighestPrice DESC;
+
+
+Q3
+
+SAMPLE PROMPT:
+
+Find all the rows where trade_type is long, and for these rows, compute the average trade_volume for groupings corresponding to unique values of the instrument column. Sort the results in descending order of the average trade_volume. Show only the instrument and average trade_volume in the results.
+
+
+SAMPLE QUERY:
+
+SELECT instrument, AVG(trade_volume) AS AvgTradeVolume 
+FROM exercise_dataset.sampletransactions
+WHERE trade_type = 'long' 
+GROUP BY instrument
+ORDER BY AvgTradeVolume DESC;
+
+
++++++ 9.1	Grouping multiple columns
+
+Q4
+
+SAMPLE PROMPT:
+
+For all unique groupings of currency and instrument column values, find the smallest value of exit_price for each grouping. Sort the results in ascending order of this smallest value. Show only the currency, instrument and smallest value in the results.
+
+SAMPLE QUERY:
+
+SELECT currency, instrument, MIN(exit_price) AS LowestPrice 
+FROM exercise_dataset.sampletransactions
+GROUP BY currency, instrument
+ORDER BY LowestPrice ASC;
+
+
+Q5
+
+SAMPLE PROMPT:
+
+Find all the rows where trade_type is short, and for these rows, compute the total trade_volume for groupings corresponding to unique values of the platform and currency column. Sort the results in descending order of this total trade_volume. Show only the platform, currency and the total trade_volume in the results.
+
+SAMPLE QUERY:
+
+SELECT platform, currency, SUM(trade_volume) AS TotalTrade 
+FROM exercise_dataset.sampletransactions
+WHERE trade_type = 'short' 
+GROUP BY platform, currency
+ORDER BY platform, TotalTrade DESC;
+
++++ 9.2	Using HAVING clause to filter on groups
+
+
+
+Q6
+
+SAMPLE PROMPT:
+
+Find the highest exit_price in groupings for all unique values of instrument. Show the instrument and this highest exit_price in the results, and exclude instruments where this highest exit_price is less than 9.5.
+
+
+SAMPLE QUERY:
+
+SELECT instrument, MAX(exit_price) AS HighestPrice 
+FROM exercise_dataset.sampletransactions
+GROUP BY instrument
+HAVING HighestPrice > 9.5;
+
+
+
+Q7
+
+SAMPLE PROMPT:
+
+For each row, the price difference is computed as the difference between the exit_price and entry_price. For rows where this price difference is 2.0 or more, compute the total trade_volume for grouping of rows corresponding to each unique value of instrument. Show the instrument and this total trade_volume in the results, and exclude instruments where this total trade_volume is less than 300000. Order the results in descending order of the total trade_volume
+
+SAMPLE QUERY:
+
+SELECT instrument, SUM(trade_volume) as TotalTrade
+FROM exercise_dataset.sampletransactions
+WHERE ABS(exit_price - entry_price)  >= 2.0
+GROUP BY instrument
+HAVING TotalTrade >= 300000
+ORDER BY TotalTrade DESC;
+
+Notice that the result you get would be quite different if you had removed the initial filter on the transactions that are to be grouped and aggregated, as shown below:
+
+SELECT instrument, SUM(trade_volume) as TotalTrade
+FROM exercise_dataset.sampletransactions
+GROUP BY instrument
+HAVING TotalTrade >= 300000
+ORDER BY TotalTrade DESC;
+
+
+
+

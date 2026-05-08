@@ -1,0 +1,419 @@
+
+
+++++ 3	Basic SELECT 
+
+SELECT * FROM first_dataset.samplesales
+
+SELECT CustID, FirstName, LastName FROM first_dataset.samplesales;
+
+SELECT Price FROM first_dataset.samplesales;
+
+SELECT Units, ProdCategory, Region FROM first_dataset.samplesales;
+
+++++ 3.1	SELECT with expressions and aliases
+
+SELECT CustID, Price, Units, Price*Units 
+FROM first_dataset.samplesales;
+
+
+SELECT CustID, Price, Units, Price*Units AS Total_Price
+FROM first_dataset.samplesales;
+
+
+SELECT CustID,  FirstName || ' ' || LastName AS FullName 
+FROM first_dataset.samplesales;
+
+
+SELECT CustID AS CustomerID, ProdCategory AS Category 
+FROM first_dataset.samplesales;
+
+
++++ 3.2	SELECT with functions 
+
+SELECT LOWER(FirstName) AS LowerFirstName,
+UPPER(LastName) AS UpperLastName 
+FROM first_dataset.samplesales;
+
+SELECT FirstName, LENGTH(FirstName) AS LengthFirstName 
+FROM first_dataset.samplesales;
+
+
+SELECT Price, CEIL(Price) as CeilingPrice, FLOOR(Price) as FloorPrice,
+ROUND(Price) as RoundPrice FROM first_dataset.samplesales;
+
+
+SELECT Date, EXTRACT(YEAR FROM Date) AS year, 
+EXTRACT(MONTH FROM date)  AS month, 
+EXTRACT (WEEK FROM Date) AS week,  
+EXTRACT(DAY FROM Date) AS day FROM first_dataset.samplesales;
+
+
++++ 3.3 SELECT with DISTINCT and COUNT
+
+
+SELECT LastName FROM first_dataset.samplesales;
+
+SELECT Region FROM first_dataset.samplesales;
+
+SELECT DISTINCT LastName FROM first_dataset.samplesales;
+
+SELECT DISTINCT Region FROM first_dataset.samplesales;
+
+SELECT DISTINCT Region, State FROM first_dataset.samplesales;
+
+SELECT COUNT(DISTINCT Region) AS Total_Regions FROM first_dataset.samplesales;
+
+SELECT COUNT(*) AS TotalRows
+FROM first_dataset.samplesales;
+
+
++++ 3.4	SELECT with LIMIT
+
+SELECT CustID, FirstName, LastName FROM first_dataset.samplesales
+LIMIT 10;
+
+
+++++ 4	Using Gemini in BigQuery
+
++++++ 4.1	Working with prompts directly in the SQL editor tab
+
+Show all the rows from the samplesales table
+
+Show only the Units, ProdCategory and Region columns from samplesales
+
+++++ 4.2	Refining prompts in the Gemini dialog box
+
+Create a new column that calculates the total sale price as the units sold multiplied with the price from the samplesales table
+
+Only show the CustID, Price, Units and total sale price column
+
+
++++++ 4.3	Refining existing queries through further prompts in the Editor tab
+
+Create a new column that calculates the total sale price as the units sold multiplied with the price from the samplesales table
+
+Only show the CustID, Price, Units and total sale price column
+
+
++++++ 4.4	Detailed prompts vs generic prompts and prompt refinement
+
+Generate a query that creates a new column called OverallPrice that calculates the total sale price as the units sold multiplied with the price from the samplesales table. The query should only show the CustID, Price, Units and the OverllPrice column.
+
+
+show me important rows that my boss needs to look at from the table
+
+++++ 4.5	Replicating previous queries
+
+Show the FirstName in lowercase and LastName in uppercase from samplesales
+
+Show the number of characters in the strings in the FirstName column 
+
+Round up the numbers in the Price column to the closest integer value 
+
+Show all the unique or distinct values in LastName 
+
+How many unique or distinct regions are there ? 
+
+Show the first 10 rows in the table
+
+
+
++++ 5	Sorting rows with ORDER BY
+
+SELECT * FROM first_dataset.samplesales ORDER BY FirstName;
+
+SELECT ProdCategory, Price FROM first_dataset.samplesales ORDER BY price DESC;
+
+SELECT LastName, FirstName FROM first_dataset.samplesales 
+ORDER BY LastName ASC, FirstName DESC;
+
+
+SELECT CustID, Price, Units, Price*Units AS Total_Price
+FROM first_dataset.samplesales
+ORDER BY Total_Price DESC;
+
+SELECT CustID, Date FROM first_dataset.samplesales 
+ORDER BY Date;
+
+
+SELECT ProdCategory, Units 
+FROM first_dataset.samplesales
+ORDER BY Units DESC
+LIMIT 5;
+
+
+SELECT CustID, Price, Units, Price*Units AS Total_Price
+FROM first_dataset.samplesales
+ORDER BY Total_Price
+LIMIT 10;
+
+++++ 7	Filtering with WHERE
+
+SELECT CustID, FirstName, LastName 
+FROM first_dataset.samplesales
+WHERE LastName = 'Lim';
+
+SELECT COUNT(CustID) AS TotalLims
+FROM first_dataset.samplesales
+WHERE LastName = 'Lim';
+
+SELECT CustID, FirstName, LastName, State 
+FROM first_dataset.samplesales
+WHERE State = 'Kedah';
+
+SELECT COUNT(CustID) AS TotalKedahSales
+FROM first_dataset.samplesales
+WHERE State = 'Kedah';
+
+
+SELECT CustID, FirstName, LastName, Units 
+FROM first_dataset.samplesales
+WHERE Units > 20;
+
+
+SELECT CustID, Price, Units, Price*Units AS Total_Price
+FROM first_dataset.samplesales
+WHERE Price*Units < 100;
+
+
+SELECT CustID, Region, Price, Units
+FROM first_dataset.samplesales
+WHERE Region <> 'Southern';
+
+
+SELECT CustID, Region, Units 
+FROM first_dataset.samplesales
+WHERE Region = 'Northern'
+ORDER BY Units DESC
+LIMIT 5;
+
+
+++++ 7.1	Using the AND, OR and NOT operators
+
+SELECT CustID, State, Price 
+FROM first_dataset.samplesales
+WHERE State = 'Kedah'
+AND Price > 20;
+
+
+SELECT CustID, ProdCategory, LastName 
+FROM first_dataset.samplesales
+WHERE ProdCategory = 'Computers'
+OR LastName = 'Lim';
+
+SELECT CustID, Region, Price, Units
+FROM first_dataset.samplesales
+WHERE NOT Region = 'Southern';
+
+
+++++ 7.2	Using BETWEEN for range tests
+
+SELECT CustID, Price 
+FROM first_dataset.samplesales
+WHERE Price >= 20 
+AND Price <= 40;
+
+SELECT CustID, Price 
+FROM first_dataset.samplesales
+WHERE Price BETWEEN 20 AND 40;
+
+SELECT CustID, Price 
+FROM first_dataset.samplesales
+WHERE Price < 20 
+OR Price > 40;
+
+SELECT CustID, Price 
+FROM first_dataset.samplesales
+WHERE Price NOT BETWEEN 20 AND 40;
+
+SELECT CustID, DATE  
+FROM first_dataset.samplesales
+WHERE DATE BETWEEN '2023-01-01' AND '2024-01-01';
+
++++ 7.3	Using IN to check for matching with other values
+
+SELECT CustID, State  
+FROM first_dataset.samplesales
+WHERE State = 'Sabah'
+OR State = 'Terengganu'
+OR State = 'Penang';
+
+
+SELECT CustID, State  
+FROM first_dataset.samplesales
+WHERE State IN ('Sabah', 'Terengganu','Penang');
+ 
+SELECT CustID, Units  
+FROM first_dataset.samplesales
+WHERE Units IN (10, 20, 25, 38); 
+
+
+SELECT CustID, Date  
+FROM first_dataset.samplesales
+WHERE Date IN ('2022-10-25', '2023-10-15', '2024-6-6'); 
+
++++ 7.4	Using LIKE to match string patterns
+
+SELECT LastName  
+FROM first_dataset.samplesales
+WHERE LastName LIKE '%i%';
+
+SELECT LastName  
+FROM first_dataset.samplesales
+WHERE LastName LIKE '__i%';
+
+
+
+
+
+++++ 8	Aggregate commands: COUNT, SUM, AVERAGE, MIN, MAX
+
+SELECT SUM(Units) AS TOTAL_UNITS 
+FROM first_dataset.samplesales;
+
+SELECT AVG(Units) AS AVG_UNITS 
+FROM first_dataset.samplesales;
+
+SELECT MAX(Units) AS LARGEST_UNIT 
+FROM first_dataset.samplesales;
+
+SELECT MIN(Units) AS SMALLEST_UNIT 
+FROM first_dataset.samplesales;
+
+
+SELECT AVG(Units) AS AVG_UNITS 
+FROM first_dataset.samplesales
+WHERE Region = 'Northern';
+
+
+SELECT Max(Price) AS HighestPrice
+FROM first_dataset.samplesales
+WHERE State = 'Kedah';
+
+SELECT Min(Units) AS SmallestOrder  
+FROM first_dataset.samplesales
+WHERE DATE BETWEEN '2024-01-01' AND '2025-01-01';
+
+
+++++ 8.1	Refining queries with aggregate functions for column details
+
+**** This below will not work ****
+SELECT CustID, FirstName, LastName, Max(Price) AS HighestPrice
+FROM first_dataset.samplesales
+WHERE State = 'Kedah';
+
+
+
+SELECT * FROM first_dataset.samplesales
+WHERE State = 'Kedah'
+AND Price = 59.5;
+
+SELECT * FROM first_dataset.samplesales
+WHERE State = 'Kedah'
+AND Price = (
+
+  SELECT Max(Price)  FROM first_dataset.samplesales
+  WHERE State = 'Kedah'
+
+);
+
+
+
+SELECT * FROM first_dataset.samplesales
+WHERE State = 'Kedah'
+ORDER BY Price DESC;
+
+
+SELECT * FROM first_dataset.samplesales
+WHERE DATE BETWEEN '2024-01-01' AND '2025-01-01'
+ORDER BY Units ASC LIMIT 3;
+
+
++++ 9	Aggregating and grouping with GROUP BY
+
+SELECT Region FROM first_dataset.samplesales
+GROUP BY Region;
+
+
+SELECT DISTINCT Region FROM first_dataset.samplesales;
+
+SELECT Region, COUNT(Region) AS NumOrders FROM first_dataset.samplesales
+GROUP BY Region;
+
+SELECT Region, AVG(Units) AS AvgUnits 
+FROM first_dataset.samplesales
+GROUP BY Region;
+
+SELECT State, MAX(Price) AS HighestPrice
+FROM first_dataset.samplesales
+GROUP BY State;
+
+SELECT ProdCategory, SUM(Units) AS TotalUnits
+FROM first_dataset.samplesales
+GROUP BY ProdCategory;
+
+
+SELECT Region, AVG(Units) AS AvgUnits 
+FROM first_dataset.samplesales
+GROUP BY Region
+ORDER BY AvgUnits DESC
+LIMIT 3;
+
+
+SELECT State, MAX(Price) AS HighestPrice
+FROM first_dataset.samplesales
+WHERE DATE BETWEEN '2022-01-01' AND '2023-01-01'
+GROUP BY State
+ORDER BY HighestPrice DESC;
+
++++++ 9.1	Grouping multiple columns
+
+
+SELECT Region, LastName, COUNT(LastName) as NumCust FROM first_dataset.samplesales
+GROUP BY Region, LastName;
+
+SELECT Region, State, Max(Price) as HighestPrice 
+FROM first_dataset.samplesales
+GROUP BY Region, State;
+
+
++++ 9.2	Using HAVING clause to filter on groups
+
+SELECT Region, AVG(Units) AS AvgUnits 
+FROM first_dataset.samplesales
+GROUP BY Region;
+
+SELECT Region, AVG(Units) AS AvgUnits 
+FROM first_dataset.samplesales
+GROUP BY Region
+HAVING AvgUnits > 15;
+
+
+SELECT Region, AVG(Units) AS AvgUnits 
+FROM first_dataset.samplesales
+WHERE Units > 15
+GROUP BY Region;
+
+SELECT Region, AVG(Units) AS AvgUnits 
+FROM first_dataset.samplesales
+WHERE Units > 15
+GROUP BY Region
+HAVING AvgUnits > 22;
+
+
+SELECT Region, AVG(Units) AS AvgUnits 
+FROM first_dataset.samplesales
+WHERE Units > 15
+GROUP BY Region
+HAVING AvgUnits > 22
+ORDER BY AvgUnits DESC
+LIMIT 2;
+
+SELECT State, MAX(Price) AS HighestPrice
+FROM first_dataset.samplesales
+GROUP BY State;
+
+SELECT State, MAX(Price) AS HighestPrice
+FROM first_dataset.samplesales
+GROUP BY State
+HAVING HighestPrice > 60;
